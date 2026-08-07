@@ -1,0 +1,13 @@
+task:
+  id: null
+  objective: null
+  complexity: null
+  effort: null
+  risk: null
+  status: idle
+  reviewer_status: pending
+decisions: []
+changed_files: []
+tests: []
+blockers: []
+next_steps: []
