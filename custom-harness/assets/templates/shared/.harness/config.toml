@@ -1,0 +1,24 @@
+schema_version = 1
+project_name = {{PROJECT_NAME_TOML}}
+default_platforms = []
+
+[classification]
+small_max_files = 3
+medium_max_files = 10
+large_risk_labels = ["security", "persistence", "release", "migration"]
+
+[commands]
+init = []
+test = []
+final = []
+
+[policy]
+allowed_write_paths = []
+protected_paths = [".env*", "**/*.key", "**/*secret*"]
+documentation_paths = ["README.md", "docs/**"]
+allow_commits = false
+allow_publish = false
+
+[language]
+functional_messages = "consumer-defined"
+code = "consumer-defined"

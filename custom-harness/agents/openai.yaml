@@ -1,0 +1,4 @@
+interface:
+  display_name: "Custom Harness"
+  short_description: "Instala orquestación multiagente reutilizable"
+  default_prompt: "Use $custom-harness to install a configurable multi-agent workflow in this repository."
