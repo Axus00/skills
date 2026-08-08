@@ -1,0 +1,15 @@
+---
+description: Enforce configurable multi-agent classification, delegation, review, and continuity.
+globs:
+alwaysApply: true
+---
+
+# Custom Harness
+
+Resolve higher-priority and repository rules before `.harness/config.toml` and safe defaults.
+
+Classify work as `small`, `medium`, or `large`. The leader records `.harness/task-status.json`, coordinates, and does not implement. Use separate agent chats or CLI invocations for implementer and reviewer passes when native isolated subagents are unavailable; record that degraded capability and never claim independent review from one uninterrupted pass.
+
+Enforce `init → analysis → implementation → tests → reviewer → corrections → final init`. Only the leader sets `done` after independent approval and final validation. Update `.harness/context/task-context.toon` near 40% remaining context.
+
+Never read secrets or `.env` files. Preserve user changes. Do not commit, publish, overwrite collisions, or mutate external state without explicit authorization.
