@@ -1,0 +1,229 @@
+{
+  "schemaVersion": 2,
+  "task": "Corregir custom-harness para Codex, Claude Code y Cursor",
+  "branch": "install-adapt",
+  "classification": "large",
+  "status": "done",
+  "phase": "done",
+  "evidence": [
+    {
+      "sequence": 1,
+      "timestamp": "2026-08-12T14:43:10.348887Z",
+      "branch": "install-adapt",
+      "from": "uninitialized",
+      "to": "initialized",
+      "actorRole": "dispatcher",
+      "actorId": "/root",
+      "summary": "Initial init passed",
+      "task": "Corregir custom-harness para Codex, Claude Code y Cursor",
+      "command": ".\\init.ps1",
+      "exitCode": 0
+    },
+    {
+      "sequence": 2,
+      "timestamp": "2026-08-12T14:43:11.363855Z",
+      "branch": "install-adapt",
+      "from": "initialized",
+      "to": "analyzed",
+      "actorRole": "leader",
+      "actorId": "/root",
+      "summary": "Architecture recommendations analyzed",
+      "classification": "large",
+      "capabilityTier": "strongest-suitable",
+      "selectedModel": "gpt-5.6-sol"
+    },
+    {
+      "sequence": 3,
+      "timestamp": "2026-08-12T14:43:12.608648Z",
+      "branch": "install-adapt",
+      "from": "analyzed",
+      "to": "delegated",
+      "actorRole": "leader",
+      "actorId": "/root",
+      "summary": "Implementation delegated",
+      "delegateId": "/root/implementer"
+    },
+    {
+      "sequence": 4,
+      "timestamp": "2026-08-12T14:43:14.698502Z",
+      "branch": "install-adapt",
+      "from": "delegated",
+      "to": "implemented",
+      "actorRole": "implementer",
+      "actorId": "/root/implementer",
+      "summary": "Initial implementation completed"
+    },
+    {
+      "sequence": 5,
+      "timestamp": "2026-08-12T14:43:17.551890Z",
+      "branch": "install-adapt",
+      "from": "implemented",
+      "to": "tested",
+      "actorRole": "implementer",
+      "actorId": "/root/implementer",
+      "summary": "Initial implementation passed 38 tests"
+    },
+    {
+      "sequence": 6,
+      "timestamp": "2026-08-12T14:43:19.348985Z",
+      "branch": "install-adapt",
+      "from": "tested",
+      "to": "review-pending",
+      "actorRole": "leader",
+      "actorId": "/root",
+      "summary": "Ready for first review",
+      "reviewerId": "/root/architecture_reviewer",
+      "independent": true,
+      "mode": "independent-review"
+    },
+    {
+      "sequence": 7,
+      "timestamp": "2026-08-12T14:43:21.066766Z",
+      "branch": "install-adapt",
+      "from": "review-pending",
+      "to": "review-rejected",
+      "actorRole": "reviewer",
+      "actorId": "/root/architecture_reviewer",
+      "summary": "Rejected for persisted-state and role ownership defects",
+      "checks": [
+        "adapter-conformance",
+        "behavior",
+        "consumer-policy",
+        "evidence",
+        "requirements",
+        "scope",
+        "security",
+        "state-transitions",
+        "tests"
+      ]
+    },
+    {
+      "sequence": 8,
+      "timestamp": "2026-08-12T14:43:22.768632Z",
+      "branch": "install-adapt",
+      "from": "review-rejected",
+      "to": "delegated",
+      "actorRole": "leader",
+      "actorId": "/root",
+      "summary": "Corrections delegated",
+      "delegateId": "/root/implementer"
+    },
+    {
+      "sequence": 9,
+      "timestamp": "2026-08-12T14:43:23.883616Z",
+      "branch": "install-adapt",
+      "from": "delegated",
+      "to": "implemented",
+      "actorRole": "implementer",
+      "actorId": "/root/implementer",
+      "summary": "Persisted-state replay and role ownership corrected"
+    },
+    {
+      "sequence": 10,
+      "timestamp": "2026-08-12T14:43:24.928196Z",
+      "branch": "install-adapt",
+      "from": "implemented",
+      "to": "tested",
+      "actorRole": "implementer",
+      "actorId": "/root/implementer",
+      "summary": "Corrections passed init validator 56 tests and diff check"
+    },
+    {
+      "sequence": 11,
+      "timestamp": "2026-08-12T14:43:26.227871Z",
+      "branch": "install-adapt",
+      "from": "tested",
+      "to": "review-pending",
+      "actorRole": "leader",
+      "actorId": "/root",
+      "summary": "Corrections ready for second review",
+      "reviewerId": "/root/architecture_reviewer",
+      "independent": true,
+      "mode": "independent-review"
+    },
+    {
+      "sequence": 12,
+      "timestamp": "2026-08-12T14:45:29.491174Z",
+      "branch": "install-adapt",
+      "from": "review-pending",
+      "to": "review-approved",
+      "actorRole": "reviewer",
+      "actorId": "/root/architecture_reviewer",
+      "summary": "Independent reviewer approved all install-adapt checks after adversarial state validation",
+      "checks": [
+        "adapter-conformance",
+        "behavior",
+        "consumer-policy",
+        "evidence",
+        "requirements",
+        "scope",
+        "security",
+        "state-transitions",
+        "tests"
+      ]
+    },
+    {
+      "sequence": 13,
+      "timestamp": "2026-08-12T14:46:09.370473Z",
+      "branch": "install-adapt",
+      "from": "review-approved",
+      "to": "final-init-passed",
+      "actorRole": "leader",
+      "actorId": "/root",
+      "summary": "Final init and diff check passed after independent approval",
+      "command": ".\\init.ps1",
+      "exitCode": 0
+    },
+    {
+      "sequence": 14,
+      "timestamp": "2026-08-12T14:46:10.212204Z",
+      "branch": "install-adapt",
+      "from": "final-init-passed",
+      "to": "done",
+      "actorRole": "leader",
+      "actorId": "/root",
+      "summary": "Custom Harness corrections completed for Codex Claude Code and Cursor"
+    }
+  ],
+  "dependencies": [],
+  "capabilityTier": "strongest-suitable",
+  "selectedModel": "gpt-5.6-sol",
+  "degradedCapabilities": [],
+  "actors": {
+    "dispatcher": [
+      "/root"
+    ],
+    "leader": [
+      "/root"
+    ],
+    "implementer": [
+      "/root/implementer"
+    ],
+    "reviewer": [
+      "/root/architecture_reviewer"
+    ]
+  },
+  "review": {
+    "approved": true,
+    "reviewerId": "/root/architecture_reviewer",
+    "independent": true,
+    "mode": "independent-review",
+    "checks": [
+      "adapter-conformance",
+      "behavior",
+      "consumer-policy",
+      "evidence",
+      "requirements",
+      "scope",
+      "security",
+      "state-transitions",
+      "tests"
+    ]
+  },
+  "validation": {
+    "initialInitPassed": true,
+    "initialInitCommand": ".\\init.ps1",
+    "finalInitPassed": true,
+    "finalInitCommand": ".\\init.ps1"
+  }
+}

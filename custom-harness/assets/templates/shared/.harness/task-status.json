@@ -1,12 +1,32 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "task": null,
+  "branch": null,
   "classification": null,
   "status": "in-progress",
+  "phase": "uninitialized",
   "evidence": [],
   "dependencies": [],
   "capabilityTier": null,
+  "selectedModel": null,
   "degradedCapabilities": [],
-  "review": null,
-  "validation": null
+  "actors": {
+    "dispatcher": [],
+    "leader": [],
+    "implementer": [],
+    "reviewer": []
+  },
+  "review": {
+    "approved": null,
+    "reviewerId": null,
+    "independent": null,
+    "mode": null,
+    "checks": []
+  },
+  "validation": {
+    "initialInitPassed": false,
+    "initialInitCommand": null,
+    "finalInitPassed": false,
+    "finalInitCommand": null
+  }
 }

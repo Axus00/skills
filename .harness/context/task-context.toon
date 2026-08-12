@@ -1,0 +1,12 @@
+objective: "Cerrar tarea"
+trigger: "before-phase-change"
+phase: "final-init-passed"
+next_phase: "done"
+state_sequence: 13
+actor_role: "leader"
+actor_id: "/root"
+decisions: ["Reviewer approved and final init passed"]
+files: []
+tests: []
+blockers: []
+next_steps: ["Registrar done"]

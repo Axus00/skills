@@ -15,6 +15,7 @@ Ejemplo de instrucción correcta para un subagente:
 
 ## Reglas
 
+- Usa exclusivamente `.harness/bin/workflow_state.py` para registrar tus checkpoints y solo las transiciones `implemented` y `tested`; nunca edites directamente el estado o el checkpoint.
 - Ejecutar la validación inicial antes de modificar código.
 - Modificar únicamente los archivos autorizados por `AGENTS.md` y el alcance.
 - Toda implementación nueva debe tener pruebas según las convenciones existentes.

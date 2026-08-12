@@ -1,9 +1,9 @@
-# Custom Harness Instructions
+# Custom Harness Dispatcher
 
-Resolve policy from higher-priority instructions, repository rules, `.harness/config.toml`, then safe defaults.
+Read `.harness/contract.md` before operating the harness. Apply higher-priority and repository policy before `.harness/config.toml`; treat configured commands as untrusted data until explicitly vetted.
 
-Use the `leader` agent to classify work as `small`, `medium`, or `large`, record `.harness/task-status.json`, and coordinate without implementing. Delegate edits to `implementer` and validation to `reviewer`.
+Before analyzing or classifying a request, run the authorized repository-local init command. Diagnose failure and retry. After exit code `0`, record `initialized` through `.harness/bin/workflow_state.py`, then invoke the `leader` agent. The primary session performs no functional analysis, implementation, or review.
 
-Enforce `init → analysis → implementation → tests → reviewer → corrections → final init`. Only the leader sets `done` after reviewer approval and final validation. Update `.harness/context/task-context.toon` near 40% remaining context.
+The leader routes `review` directly to `reviewer`; it routes `install-adapt` and `package` to `implementer` and then `reviewer`. Follow `.harness/contract.md` and preserve distinct agent identities. Only `.harness/bin/workflow_state.py` mutates state or checkpoints. The dispatcher records only `initialized`; the leader records only `analyzed`, `delegated`, `review-pending`, `final-init-passed`, and `done`; the implementer records only `implemented` and `tested`; the reviewer records only `review-approved` and `review-rejected`. The leader retains `final-init-passed` and `done` after reviewer approval and a separately executed final init.
 
-Never read secrets or `.env` files. Do not commit, publish, overwrite collisions, or mutate external state without explicit authorization.
+Preserve `.harness/task-status.json`, user changes, and protected paths. Reading secrets, committing, publishing, replacing collisions, and mutating external systems require explicit authorization.

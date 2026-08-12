@@ -15,6 +15,9 @@ from pathlib import Path
 SKILL_ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE_ROOT = SKILL_ROOT / "assets" / "templates"
 PLATFORMS = ("codex", "claude", "cursor")
+RUNTIME_FILES = {
+    Path(".harness/bin/workflow_state.py"): SKILL_ROOT / "scripts" / "workflow_state.py",
+}
 
 
 @dataclass(frozen=True)
@@ -42,6 +45,12 @@ def template_files(platforms: list[str], project_name: str) -> dict[Path, str]:
             if previous is not None and previous != rendered:
                 raise ValueError(f"Adapters render conflicting content for {relative}")
             files[relative] = rendered
+    for relative, source in RUNTIME_FILES.items():
+        rendered = source.read_text(encoding="utf-8")
+        previous = files.get(relative)
+        if previous is not None and previous != rendered:
+            raise ValueError(f"Runtime renders conflicting content for {relative}")
+        files[relative] = rendered
     return files
 
 
