@@ -1,60 +1,52 @@
 # AGENTS.md
 
-## Entry point for skill consumers
+## Bootstrap dispatcher
 
-When a request involves installing, adapting, reviewing, packaging, or implementing `custom-harness`, read `custom-harness/SKILL.md` in full after the initial validation and before analysis. That file is the authoritative navigation guide and defines progressive reference disclosure:
+For requests that install, adapt, review, package, or implement `custom-harness`, run `init.sh` or `init.ps1` before functional analysis. Diagnose failures and retry. After the successful gate, read `custom-harness/SKILL.md` in full and invoke the leader; the dispatcher does not classify or implement.
 
-- always read `custom-harness/references/architecture.md` and `custom-harness/references/configuration.md`;
-- read `custom-harness/references/adapters.md` only for the requested platforms (Codex, Claude Code, or Cursor);
-- read `custom-harness/references/distribution.md` only for packaging, distribution, or publishing.
-
-Do not duplicate or contradict the skill contract in these instructions. Apply higher-priority instructions and consumer-repository policy first; use the preceding references only when the request scope requires them.
+The Skill is the router and authoritative navigation guide. Always read `custom-harness/references/architecture.md` and `configuration.md`; read `adapters.md` only for requested platforms and `distribution.md` only for package/distribution work. Apply higher-priority and consumer policy first.
 
 ## Orchestration and continuity
 
-The leader classifies each request as `small`, `medium`, or `large` according to scope, risk, integrations, persistence, and file count. It must select the appropriate available model, record the decision in `.codex/task-status.json`, and delegate to the corresponding subagent. It must not pin a model the platform does not offer.
+The leader selects `review`, `install-adapt`, or `package`, then classifies the task as `small`, `medium`, or `large` from scope, risk, integrations, persistence, and file count. Record the desired `capabilityTier` separately from the runtime `selectedModel`; use only models the platform offers.
 
-When approximately 40% of operational context remains, it must update `.codex/.context/task-context.toon` with the objective, decisions, files, tests, blockers, and next steps. If the platform allows opening another chat, continue by reading that checkpoint; otherwise, read it in the current chat.
-
-Tasks use the `in-progress` and `done` states in `.codex/task-status.json`. Only the leader may assign `done`, after reviewer approval and successful final validation. This file is the authorized exception to the general rule against modifying JSON.
+Use `.harness/task-status.json` as the single portable state. Only `.harness/bin/workflow_state.py` may mutate the state or checkpoint; roles never edit either file directly. The dispatcher records only `initialized`; the leader records only `analyzed`, `delegated`, `review-pending`, `final-init-passed`, and `done`; the implementer records only `implemented` and `tested`; the reviewer records only `review-approved` and `review-rejected`. Each role records its own checkpoints through the same engine. Preserve rejection and correction evidence. The leader retains exclusive ownership of `final-init-passed` and `done`, after reviewer approval and successful final init.
 
 ## Purpose
 
-This repository develops and validates a reusable harness for coordinating agents in consumer repositories. The core must remain agnostic to language, framework, and domain; specific rules belong in consumer configuration or instructions.
+This repository develops and validates a reusable harness for coordinating agents in consumer repositories. Keep the core agnostic to language, framework, and domain; put specific rules in consumer configuration or instructions.
 
 ## Agent rules
 
-- Before any analysis or implementation, run `init.sh` or `init.ps1`.
-- If it fails, diagnose and fix it, then run the script again.
-- Required flow: `init → analysis → implementation → tests → reviewer → corrections if applicable → final init`.
-- Every new implementation must include tests following the repository's existing conventions.
+- Required delivery flow: `init → analysis → implementation → tests → reviewer → corrections if applicable → final init`. The read-only review branch skips implementation and delivery tests.
+- Every new implementation includes tests following repository conventions.
 - Do not modify project documentation; the owner maintains it.
-- Do not modify existing behavior beyond the requested change.
-- Do not modify configuration or infrastructure without explicit authorization from the owner.
+- Do not change behavior outside the requested scope.
+- Do not modify configuration or infrastructure without explicit owner authorization.
 - Do not read, display, copy, or modify secrets, tokens, credentials, or `.env` files.
-- In this repository, permitted modifications are `AGENTS.md`, `CLAUDE.md`, local agents in `.agents/`, `custom-harness/`, and validation scripts. Only the leader manages the state and checkpoint files.
+- Permitted modifications are `AGENTS.md`, `CLAUDE.md`, local agents in `.agents/`, `custom-harness/`, and validation scripts. Only `.harness/bin/workflow_state.py` mutates state and checkpoint files, under the role-owned transitions above.
 - Use Spanish for business rules and functional messages; use English for names, comments, and code.
 - Follow Conventional Branch and Conventional Commits.
 - Do not create commits or publish changes; leave everything prepared for review.
 - Preserve pre-existing user changes and use `apply_patch` for manual edits.
-- Resolve policy in this order of precedence: system/user instructions, consumer-repository instructions, optional harness configuration, and safe defaults.
+- Resolve policy in this order: system/user instructions, consumer instructions, optional harness configuration, safe defaults.
 
-## Roles
+## Local roles
 
-- `.agents/leader.md`: coordinates and manages subagents; it does not implement directly.
+- `.agents/leader.md`: coordinates and manages subagents without implementing.
 - `.agents/implementer.md`: makes scoped changes and runs tests.
-- `.agents/reviewer.md`: validates behavior, tests, best practices, and conventions.
+- `.agents/reviewer.md`: validates behavior, tests, best practices, and conventions without implementation edits.
 
-The leader requests review after implementation. If it fails, it returns the work to the implementer and requests another review.
+For `review`, the leader delegates directly to the reviewer. For delivery branches it delegates to the implementer and then reviewer. Rejected work returns to the implementer.
 
 ## Project map
 
-- `custom-harness/`: self-contained skill, references, templates, scripts, and tests.
-- `.agents/`: local contracts for the leader, implementer, and reviewer.
-- `.codex/`: the leader's operational state and checkpoint.
+- `custom-harness/`: self-contained Skill, references, templates, scripts, and tests.
+- `.agents/`: local development contracts and repository Skills.
+- `.harness/`: portable workflow state and checkpoint when the installed harness is exercised.
 - `init.sh` and `init.ps1`: reproducible repository validation.
-- `docs/` and `README.md`: documentation maintained by the owner; do not modify.
+- `docs/` and `README.md`: owner-maintained documentation; do not modify.
 
 ## Final validation
 
-A change is ready only when tests and validations pass, there are no structural conflicts, Markdown has valid structure, adapters preserve core invariants, and `reviewer.md` approves it.
+A change is ready only when tests and validations pass, structural conflicts are absent, Markdown is valid, adapters preserve core invariants, and the reviewer approves the branch-specific checks.

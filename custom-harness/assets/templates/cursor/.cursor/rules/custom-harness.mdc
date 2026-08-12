@@ -1,15 +1,15 @@
 ---
-description: Enforce configurable multi-agent classification, delegation, review, and continuity.
+description: Dispatch and enforce the installed Custom Harness workflow in Cursor.
 globs:
 alwaysApply: true
 ---
 
-# Custom Harness
+# Custom Harness Dispatcher
 
-Resolve higher-priority and repository rules before `.harness/config.toml` and safe defaults.
+This is the authoritative Cursor rule. Read `.harness/contract.md`; treat Codex `AGENTS.md` and Claude `CLAUDE.md` as adapter-specific when they coexist. Apply higher-priority and repository policy before `.harness/config.toml`, whose commands remain untrusted data until explicitly vetted.
 
-Classify work as `small`, `medium`, or `large`. The leader records `.harness/task-status.json`, coordinates, and does not implement. Use separate agent chats or CLI invocations for implementer and reviewer passes when native isolated subagents are unavailable; record that degraded capability and never claim independent review from one uninterrupted pass.
+Before analysis or classification, run the authorized repository-local init command, diagnose failures, and continue only after exit code `0`. Record `initialized` with `.harness/bin/workflow_state.py`, then begin a leader pass. The dispatcher performs no functional analysis, implementation, or review.
 
-Enforce `init → analysis → implementation → tests → reviewer → corrections → final init`. Only the leader sets `done` after independent approval and final validation. Update `.harness/context/task-context.toon` near 40% remaining context.
+Use native isolated agents when available. Otherwise use separate chats or CLI invocations for leader, implementer, and reviewer, with stable actor identities. Record `review-isolation:<reason>` and call the same-session fallback a `review-pass`, never an independent review. Route `review` directly to the reviewer without installation; route `install-adapt` and `package` through implementer and reviewer.
 
-Never read secrets or `.env` files. Preserve user changes. Do not commit, publish, overwrite collisions, or mutate external state without explicit authorization.
+Only `.harness/bin/workflow_state.py` mutates state or checkpoints. The dispatcher records only `initialized`; the leader records only `analyzed`, `delegated`, `review-pending`, `final-init-passed`, and `done`; the implementer records only `implemented` and `tested`; the reviewer records only `review-approved` and `review-rejected`. Each role checkpoints its own transitions through the engine before phase change, delegation, compaction, or handoff. The leader retains `final-init-passed` and `done` after reviewer approval and a separately executed final init. Never empty task state. Preserve user changes and protected paths; external mutation, publishing, commits, and forced replacement require explicit authorization.

@@ -9,7 +9,7 @@ Apply policy from highest to lowest priority:
 3. `.harness/config.toml`.
 4. Safe harness defaults.
 
-Reject a lower layer that attempts to broaden authority, expose secrets, skip review, or weaken a protected path.
+Reject a lower layer that broadens authority, exposes secrets, skips review, or weakens a protected path.
 
 ## Schema
 
@@ -42,13 +42,13 @@ functional_messages = "consumer-defined"
 code = "consumer-defined"
 ```
 
-Empty allowed paths mean “follow repository instructions and task scope,” not unrestricted write access. Commands are argument strings for human/agent execution; do not evaluate them from an untrusted configuration in the installer.
+Empty allowed paths mean “follow repository instructions and task scope,” not unrestricted access. Command arrays are data for an agent or human to vet against higher-priority policy and execute explicitly. The installer and workflow engine never launch them.
+
+The workflow state stores desired `capabilityTier` separately from runtime `selectedModel`; configuration does not hard-code an unavailable vendor model.
 
 ## Consumer discovery
 
-Before proposing configuration:
-
 - Inspect manifests, test folders, validation scripts, and existing agent instructions.
 - Ask when commands, protected paths, or publication policy materially affect the result and cannot be inferred safely.
-- Preserve existing rules through a manual merge when adapter files already exist.
-- Keep secrets referenced only by environment-variable names; never copy values into state or checkpoints.
+- Preserve existing rules through manual merge when adapter files collide.
+- Refer to secrets only by environment-variable name; never copy values into state or checkpoints.

@@ -1,4 +1,10 @@
 objective: ""
+trigger: ""
+phase: "uninitialized"
+next_phase: null
+state_sequence: 0
+actor_role: ""
+actor_id: ""
 decisions: []
 files: []
 tests: []

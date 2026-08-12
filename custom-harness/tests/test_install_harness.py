@@ -75,7 +75,7 @@ class InstallHarnessTests(unittest.TestCase):
             self.assertEqual(0, result)
             backup = target / ".harness/backups/AGENTS.md.bak"
             self.assertEqual("# Existing\n", backup.read_text(encoding="utf-8"))
-            self.assertIn("# Custom Harness Instructions", (target / "AGENTS.md").read_text(encoding="utf-8"))
+            self.assertIn("# Custom Harness Dispatcher", (target / "AGENTS.md").read_text(encoding="utf-8"))
 
     def test_force_does_not_follow_symlinked_destination(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -120,17 +120,17 @@ class InstallHarnessTests(unittest.TestCase):
             target.mkdir()
             outside.mkdir()
             (target / ".harness/backups").mkdir(parents=True)
-            (target / ".harness/backups/.agents").symlink_to(outside, target_is_directory=True)
-            (target / ".agents").mkdir()
-            role = target / ".agents/leader.md"
-            role.write_text("# Existing leader\n", encoding="utf-8")
+            (target / ".harness/backups/.codex").symlink_to(outside, target_is_directory=True)
+            (target / ".codex/agents").mkdir(parents=True)
+            role = target / ".codex/agents/leader.toml"
+            role.write_text('name = "existing"\n', encoding="utf-8")
 
             result = INSTALLER.main(
                 ["--target", str(target), "--platform", "codex", "--force"]
             )
 
             self.assertEqual(2, result)
-            self.assertEqual("# Existing leader\n", role.read_text(encoding="utf-8"))
+            self.assertEqual('name = "existing"\n', role.read_text(encoding="utf-8"))
             self.assertEqual([], list(outside.iterdir()))
             self.assertFalse((target / "AGENTS.md").exists())
             self.assertFalse((target / ".harness/config.toml").exists())

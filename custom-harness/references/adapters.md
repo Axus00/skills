@@ -2,29 +2,29 @@
 
 ## Shared contract
 
-Generate platform files from one versioned core. Conformance checks must assert the same classification levels, role boundaries, workflow gates, state ownership, collision policy, and checkpoint fields across adapters.
+Every platform installs `.harness/contract.md`, `.harness/bin/workflow_state.py`, state, checkpoint, and configuration. Conformance checks assert equivalent branch routing, init gate, actor boundaries, checkpoints, review isolation, final-init gate, and collision behavior.
 
 ## Codex
 
-- Use root `AGENTS.md` for repository instructions.
-- Keep role contracts in `.agents/leader.md`, `.agents/implementer.md`, and `.agents/reviewer.md`, referenced from `AGENTS.md`.
-- Use available subagent/thread coordination tools. The leader delegates and waits; it never edits implementation files.
-- Store portable state under `.harness/`; if a host requires `.codex/`, map the same schema without duplicating authority.
+- Use root `AGENTS.md` as the dispatcher.
+- Define executable project custom agents in `.codex/agents/leader.toml`, `implementer.toml`, and `reviewer.toml`. Each file requires `name`, `description`, and `developer_instructions`; do not pin a model.
+- Install `.agents/skills/custom-harness/SKILL.md` as a discovery pointer to `.harness/contract.md`. Do not install role contracts as `.agents/*.md`.
+- Use native subagent coordination. Keep implementer and reviewer identities distinct and store only portable state under `.harness/`.
 
 ## Claude Code
 
-- Use root `CLAUDE.md` for repository instructions.
-- Install reusable skills in `.claude/skills/<skill-name>/SKILL.md` for project scope or `~/.claude/skills` for user scope.
-- Render native subagent definitions under `.claude/agents/` with explicit leader, implementer, and reviewer responsibilities.
-- Keep the leader agent tool set read/coordinate oriented; grant write tools only to the implementer when policy allows.
+- Use root `CLAUDE.md` as the dispatcher.
+- Define native agents under `.claude/agents/` with frontmatter, bounded tools, and equivalent role contracts.
+- Install `.claude/skills/custom-harness/SKILL.md` as a discovery pointer to `.harness/contract.md`.
+- Permit reviewer Bash only for checks and guarded task-state/checkpoint writes, not implementation edits.
 
 ## Cursor
 
-- Prefer Agent Skills and project rules in `.cursor/rules/*.mdc`; `.cursorrules` is legacy.
-- Cursor CLI also reads root `AGENTS.md` and `CLAUDE.md`, but generate one authoritative Cursor rule to avoid contradictory duplicates.
-- If the active Cursor environment cannot create independently isolated subagents, run role passes in separate chats/CLI invocations and mark review as degraded. Never claim independent review from a single uninterrupted role-playing pass.
-- Keep rule metadata focused and version controlled; do not place credentials or permission grants in generated prose.
+- Install one authoritative `.cursor/rules/custom-harness.mdc`; `.cursorrules` is legacy.
+- When other adapters coexist, treat their root files as host-specific rather than competing Cursor policy.
+- Prefer native isolated agents. Otherwise use separate chats or CLI invocations, record the isolation degradation, and call same-session validation a review pass.
+- Do not claim independent review without a distinct actor identity.
 
 ## Capability negotiation
 
-At runtime detect: native subagents, model tiers, persistent thread support, approval controls, and skill discovery paths. Select the strongest supported behavior. When a capability is absent, record the degradation in task status and preserve all enforceable gates.
+Detect native subagents, persistent identity, available model tiers, approval controls, and skill discovery at runtime. Record desired `capabilityTier` separately from `selectedModel`. Preserve every enforceable gate when a capability is missing and record the exact degradation.
