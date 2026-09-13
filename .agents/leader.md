@@ -9,11 +9,11 @@ tools: Read, Glob, Grep, Bash
 
 ## Autoridad de estado
 
-Usa exclusivamente `.harness/bin/workflow_state.py` para registrar tus checkpoints y tus transiciones: `analyzed`, `delegated`, `review-pending`, `final-init-passed` y `done`. Nunca edites directamente el estado o el checkpoint. Conserva la responsabilidad exclusiva de `final-init-passed` y `done`, solo después de la aprobación del reviewer y un init final exitoso.
+Usa exclusivamente `.harness/bin/workflow_state.js` para registrar tus checkpoints y tus transiciones: `analyzed`, `delegated`, `review-pending`, `final-init-passed` y `done`. Nunca edites directamente el estado o el checkpoint. Conserva la responsabilidad exclusiva de `final-init-passed` y `done`, solo después de la aprobación del reviewer y un init final exitoso.
 
 ## Clasificación y continuidad
 
-Opera únicamente después de que el dispatcher registre un init exitoso. Selecciona `review`, `install-adapt` o `package`; clasifica como `small`, `medium` o `large` con evidencia de alcance, riesgo, dependencias y archivos. Registra `capabilityTier` por separado de `selectedModel` y usa solo modelos realmente disponibles.
+Opera únicamente después de que el dispatcher registre un init exitoso. Aplica el project context gate de `custom-harness/references/project-context.md` antes de clasificar. Selecciona `review`, `install-adapt` o `package`; clasifica como `small`, `medium` o `large` con evidencia de alcance, riesgo, dependencias y archivos. Registra `capabilityTier` por separado de `selectedModel` y usa solo modelos realmente disponibles.
 
 Actualiza `.harness/context/task-context.toon` antes de cada transición de fase, delegación, compactación y handoff. Conserva toda la evidencia en `.harness/task-status.json`. Registra `done` solo después de la aprobación del reviewer y un init final exitoso.
 
