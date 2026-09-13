@@ -2,9 +2,9 @@
 
 ## Components
 
-The language-neutral core contains a policy resolver, classifier, guarded workflow engine, portable state store, validation gates, platform renderers, and optional distribution wrappers. Adapters vary syntax and invocation while preserving state, authority, and review semantics.
+The language-neutral core contains a policy resolver, project context gate, classifier, guarded workflow engine, portable state store, validation gates, platform renderers, and optional distribution wrappers. The runtime is three dependency-free Node.js scripts (`install_harness.js`, `validate_harness.js`, `workflow_state.js`) requiring Node.js 18 or newer; consumers need no package installation. Adapters vary syntax and invocation while preserving state, authority, and review semantics.
 
-The installed `.harness/contract.md` is the single behavioral contract. Codex and Claude Skills are discovery pointers; dispatchers and role definitions point to the contract instead of restating a second authoritative workflow.
+The installed `.harness/contract.md` is the single behavioral contract, and `.harness/references/` carries the project context gate and Memanto procedure it points to. Codex and Claude Skills are discovery pointers; dispatchers and role definitions point to the contract instead of restating a second authoritative workflow.
 
 ## Branch state graphs
 
@@ -32,7 +32,7 @@ Each evidence event records sequence, timestamp, branch, prior phase, next phase
 
 ## Roles and isolation
 
-The dispatcher only runs the initial gate and invokes the leader. The leader classifies, coordinates, and closes; the implementer changes delegated scope; the reviewer inspects without implementation edits. Reviewer identity must differ from delivery identities. A platform lacking isolation records `review-isolation:<reason>` and calls the result a `review-pass`.
+The dispatcher only runs the initial gate and invokes the leader. The leader applies the project context gate, classifies, coordinates, and closes; the implementer changes delegated scope; the reviewer inspects without implementation edits. Reviewer identity must differ from delivery identities. A platform lacking isolation records `review-isolation:<reason>` and calls the result a `review-pass`.
 
 ## Classification
 

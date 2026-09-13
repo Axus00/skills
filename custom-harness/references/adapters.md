@@ -2,12 +2,12 @@
 
 ## Shared contract
 
-Every platform installs `.harness/contract.md`, `.harness/bin/workflow_state.py`, state, checkpoint, and configuration. Conformance checks assert equivalent branch routing, init gate, actor boundaries, checkpoints, review isolation, final-init gate, and collision behavior.
+Every platform installs `.harness/contract.md`, `.harness/bin/workflow_state.js`, `.harness/references/project-context.md`, `.harness/references/memanto.md`, state, checkpoint, and configuration. The project context gate therefore reaches every platform through the contract, including Cursor, which has no skill discovery. Conformance checks assert equivalent branch routing, init gate, actor boundaries, checkpoints, review isolation, final-init gate, and collision behavior.
 
 ## Codex
 
 - Use root `AGENTS.md` as the dispatcher.
-- Define executable project custom agents in `.codex/agents/leader.toml`, `implementer.toml`, and `reviewer.toml`. Each file requires `name`, `description`, and `developer_instructions`; do not pin a model.
+- Define executable project custom agents in `.codex/agents/leader.toml`, `implementer.toml`, and `reviewer.toml`. Each file requires `name`, `description`, and `developer_instructions`; do not pin a model. Keep agent TOML within the subset the dependency-free validator parses: strings (including multi-line basic strings), integers, booleans, arrays of scalars, and `[table]` headers.
 - Install `.agents/skills/custom-harness/SKILL.md` as a discovery pointer to `.harness/contract.md`. Do not install role contracts as `.agents/*.md`.
 - Use native subagent coordination. Keep implementer and reviewer identities distinct and store only portable state under `.harness/`.
 

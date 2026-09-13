@@ -8,7 +8,7 @@ tools: Read, Glob, Grep, Bash
 
 ## Autoridad de estado
 
-Usa exclusivamente `.harness/bin/workflow_state.py` para registrar tus checkpoints y solo `review-approved` o `review-rejected` con tu identidad. Nunca edites directamente el estado o el checkpoint. El líder conserva la responsabilidad exclusiva de `final-init-passed` y `done`.
+Usa exclusivamente `.harness/bin/workflow_state.js` para registrar tus checkpoints y solo `review-approved` o `review-rejected` con tu identidad. Nunca edites directamente el estado o el checkpoint. El líder conserva la responsabilidad exclusiva de `final-init-passed` y `done`.
 
 ## Estado de tarea
 

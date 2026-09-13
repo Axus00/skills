@@ -4,7 +4,13 @@
 
 The primary dispatcher performs only policy loading and command selection before validation. Select an authorized repository-local init command, run it explicitly, diagnose failures, and continue only after exit code `0`. Treat `.harness/config.toml` command arrays as data to review; the harness never executes them automatically.
 
-Record the successful command with `.harness/bin/workflow_state.py transition --to initialized`. Then dispatch the leader. The dispatcher does not classify, analyze, implement, or review the request.
+Record the successful command with `.harness/bin/workflow_state.js transition --to initialized`. Then dispatch the leader. The dispatcher does not classify, analyze, implement, or review the request.
+
+## Project context gate
+
+After the entry gate and before analysis, the leader applies the project context gate defined in `.harness/references/project-context.md`: recall durable project context, judge whether it is sufficient for the requested branch, and enter Grill Mode only under the material-impact conditions that reference defines. Use `.harness/references/memanto.md` only when Memanto must be discovered, bootstrapped, connected, or verified.
+
+Memanto is optional. When it is unavailable, continue on repository evidence and the current conversation, and record the fallback as a decision in the next checkpoint. Keep durable project memory separate from workflow state: `.harness/task-status.json` holds execution state only, and memory never stores phases, reviewer results, secrets, or transient output.
 
 ## Branch router
 
@@ -13,16 +19,16 @@ Record the successful command with `.harness/bin/workflow_state.py transition --
 - `package`: uses the install-adapt graph and adds distribution verification.
 - Every approved branch continues `review-approved -> final-init-passed -> done`.
 
-The leader selects the branch after the entry gate. It records classification evidence, `capabilityTier`, and the distinct runtime `selectedModel`. It delegates install/adapt/package work to the implementer and sends review work directly to the reviewer.
+The leader selects the branch after the entry gate and the project context gate. It records classification evidence, `capabilityTier`, and the distinct runtime `selectedModel`. It delegates install/adapt/package work to the implementer and sends review work directly to the reviewer.
 
 ## State engine
 
-Use `.harness/task-status.json` as the only workflow state. Only `.harness/bin/workflow_state.py` may mutate that state or its checkpoint; roles never edit either file directly. Invoke the engine through:
+Use `.harness/task-status.json` as the only workflow state. Only `.harness/bin/workflow_state.js` may mutate that state or its checkpoint; roles never edit either file directly. Invoke the engine through Node.js 18 or newer:
 
 ```text
-<python> .harness/bin/workflow_state.py transition ...
-<python> .harness/bin/workflow_state.py checkpoint ...
-<python> .harness/bin/workflow_state.py check
+node .harness/bin/workflow_state.js transition ...
+node .harness/bin/workflow_state.js checkpoint ...
+node .harness/bin/workflow_state.js check
 ```
 
 Run `--help` for exact arguments. Every transition records its prior phase, next phase, actor role, actor identity, evidence, and timestamp. Use a stable thread, chat, or session identifier for `--actor-id`. The engine rejects analysis without a successful initial init, undelegated implementers, invalid phase order, incomplete reviewer checks, final init before approval, and `done` before final init. Preserve the status file and all completed or rejected evidence.
@@ -32,7 +38,7 @@ Checkpoint before each phase transition, delegation, compaction, and handoff. Ti
 ## Role boundaries
 
 - Dispatcher: run the entry gate, record only `initialized`, and invoke the leader.
-- Leader: analyze, classify, select available capability/model, coordinate, and record only `analyzed`, `delegated`, `review-pending`, `final-init-passed`, and `done`. It never implements, corrects, or self-approves. It retains exclusive ownership of final init and `done`.
+- Leader: apply the project context gate, then analyze, classify, coordinate, and record only `analyzed`, `delegated`, `review-pending`, `final-init-passed`, and `done`. It never implements, corrects, or self-approves. It retains exclusive ownership of final init and `done`.
 - Implementer: change only delegated scope, preserve user work, add and run relevant tests, and record only `implemented` and `tested`.
 - Reviewer: inspect without changing implementation files, record only `review-approved` or `review-rejected`, and never set `done`.
 

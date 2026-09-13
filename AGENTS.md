@@ -2,15 +2,15 @@
 
 ## Bootstrap dispatcher
 
-For requests that install, adapt, review, package, or implement `custom-harness`, run `init.sh` or `init.ps1` before functional analysis. Diagnose failures and retry. After the successful gate, read `custom-harness/SKILL.md` in full and invoke the leader; the dispatcher does not classify or implement.
+For requests that install, adapt, review, package, or implement `custom-harness`, run `init.sh` or `init.ps1` (Node.js 18 or newer, no packages) before functional analysis. Diagnose failures and retry. After the successful gate, read `custom-harness/SKILL.md` in full and invoke the leader; the dispatcher does not classify or implement.
 
 The Skill is the router and authoritative navigation guide. Always read `custom-harness/references/architecture.md` and `configuration.md`; read `adapters.md` only for requested platforms and `distribution.md` only for package/distribution work. Apply higher-priority and consumer policy first.
 
 ## Orchestration and continuity
 
-The leader selects `review`, `install-adapt`, or `package`, then classifies the task as `small`, `medium`, or `large` from scope, risk, integrations, persistence, and file count. Record the desired `capabilityTier` separately from the runtime `selectedModel`; use only models the platform offers.
+The leader applies the project context gate from `custom-harness/references/project-context.md`, selects `review`, `install-adapt`, or `package`, then classifies the task as `small`, `medium`, or `large` from scope, risk, integrations, persistence, and file count. Record the desired `capabilityTier` separately from the runtime `selectedModel`; use only models the platform offers.
 
-Use `.harness/task-status.json` as the single portable state. Only `.harness/bin/workflow_state.py` may mutate the state or checkpoint; roles never edit either file directly. The dispatcher records only `initialized`; the leader records only `analyzed`, `delegated`, `review-pending`, `final-init-passed`, and `done`; the implementer records only `implemented` and `tested`; the reviewer records only `review-approved` and `review-rejected`. Each role records its own checkpoints through the same engine. Preserve rejection and correction evidence. The leader retains exclusive ownership of `final-init-passed` and `done`, after reviewer approval and successful final init.
+Use `.harness/task-status.json` as the single portable state. Only `.harness/bin/workflow_state.js` may mutate the state or checkpoint; roles never edit either file directly. The dispatcher records only `initialized`; the leader records only `analyzed`, `delegated`, `review-pending`, `final-init-passed`, and `done`; the implementer records only `implemented` and `tested`; the reviewer records only `review-approved` and `review-rejected`. Each role records its own checkpoints through the same engine. Preserve rejection and correction evidence. The leader retains exclusive ownership of `final-init-passed` and `done`, after reviewer approval and successful final init.
 
 ## Purpose
 
@@ -24,7 +24,7 @@ This repository develops and validates a reusable harness for coordinating agent
 - Do not change behavior outside the requested scope.
 - Do not modify configuration or infrastructure without explicit owner authorization.
 - Do not read, display, copy, or modify secrets, tokens, credentials, or `.env` files.
-- Permitted modifications are `AGENTS.md`, `CLAUDE.md`, local agents in `.agents/`, `custom-harness/`, and validation scripts. Only `.harness/bin/workflow_state.py` mutates state and checkpoint files, under the role-owned transitions above.
+- Permitted modifications are `AGENTS.md`, `CLAUDE.md`, local agents in `.agents/`, `custom-harness/`, and validation scripts. Only `.harness/bin/workflow_state.js` mutates state and checkpoint files, under the role-owned transitions above.
 - Use Spanish for business rules and functional messages; use English for names, comments, and code.
 - Follow Conventional Branch and Conventional Commits.
 - Do not create commits or publish changes; leave everything prepared for review.

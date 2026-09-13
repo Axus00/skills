@@ -15,7 +15,7 @@ pnpm dlx @scope/custom-harness
 bunx @scope/custom-harness
 ```
 
-Do not create separate pnpm or Bun packages. Keep the CLI a thin wrapper over the embedded core and support `install`, `validate`, `--platform`, `--target`, `--dry-run`, and an explicit replacement flag.
+Do not create separate pnpm or Bun packages. The core scripts are already dependency-free Node.js, so the npm wrapper re-exports them without a build step. Keep the CLI a thin wrapper over the embedded core and support `install`, `validate`, `--platform`, `--target`, `--dry-run`, and an explicit replacement flag.
 
 ## .NET ecosystem
 

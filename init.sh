@@ -10,41 +10,33 @@ for required in \
   "AGENTS.md" \
   "custom-harness/SKILL.md" \
   "custom-harness/agents/openai.yaml" \
-  "custom-harness/scripts/workflow_state.py" \
+  "custom-harness/scripts/workflow_state.js" \
+  "custom-harness/scripts/install_harness.js" \
+  "custom-harness/scripts/validate_harness.js" \
+  "custom-harness/references/project-context.md" \
+  "custom-harness/references/memanto.md" \
   "custom-harness/assets/templates/codex/.codex/agents/leader.toml" \
   "custom-harness/assets/templates/claude/.claude/agents/leader.md" \
   "custom-harness/assets/templates/cursor/.cursor/rules/custom-harness.mdc"; do
   test -e "$required" || fail "Falta la ruta requerida: $required"
 done
 
-PYTHON_COMMAND=()
-resolve_python() {
-  local candidate
+MIN_NODE_MAJOR=18
+NODE_COMMAND=""
+node_is_supported() {
+  local candidate="$1"
+  command -v "$candidate" >/dev/null 2>&1 || return 1
+  "$candidate" -e "process.exit(Number(process.versions.node.split('.')[0]) >= $MIN_NODE_MAJOR ? 0 : 1)" >/dev/null 2>&1
+}
+resolve_node() {
   local -a attempts=()
-
-  if [[ -n "${HARNESS_PYTHON:-}" ]]; then
-    attempts+=("$HARNESS_PYTHON")
-    if [[ -x "$HARNESS_PYTHON" ]] && "$HARNESS_PYTHON" -c 'import sys' >/dev/null 2>&1; then
-      PYTHON_COMMAND=("$HARNESS_PYTHON")
-      return
-    fi
+  if [[ -n "${HARNESS_NODE:-}" ]]; then
+    attempts+=("$HARNESS_NODE")
+    if node_is_supported "$HARNESS_NODE"; then NODE_COMMAND="$HARNESS_NODE"; return; fi
   fi
-
-  for candidate in python3 python; do
-    attempts+=("$candidate")
-    if command -v "$candidate" >/dev/null 2>&1 && "$candidate" -c 'import sys' >/dev/null 2>&1; then
-      PYTHON_COMMAND=("$candidate")
-      return
-    fi
-  done
-
-  attempts+=("py -3")
-  if command -v py >/dev/null 2>&1 && py -3 -c 'import sys' >/dev/null 2>&1; then
-    PYTHON_COMMAND=(py -3)
-    return
-  fi
-
-  fail "Python 3 no está disponible. Intentos: ${attempts[*]}. Configure HARNESS_PYTHON con la ruta de un ejecutable Python 3."
+  attempts+=("node")
+  if node_is_supported node; then NODE_COMMAND="node"; return; fi
+  fail "Node.js ${MIN_NODE_MAJOR}+ no está disponible. Intentos: ${attempts[*]}. Instale Node.js ${MIN_NODE_MAJOR} o superior, o configure HARNESS_NODE con la ruta de un ejecutable compatible."
 }
 
 has_valid_skill_frontmatter() {
@@ -59,11 +51,13 @@ has_valid_skill_frontmatter() {
   ' "$markdown"
 }
 
-resolve_python
+resolve_node
 
 validation_roots=(AGENTS.md .agents custom-harness init.sh init.ps1)
 [[ -f CLAUDE.md ]] && validation_roots+=(CLAUDE.md)
-if grep -RIn -E '^(<<<<<<<|=======|>>>>>>>)' "${validation_roots[@]}" >/dev/null 2>&1; then
+# Third-party skills under .agents/skills are installed content, not validated here.
+if find "${validation_roots[@]}" -path '.agents/skills' -prune -o -type f -print0 \
+  | xargs -0 grep -In -E '^(<<<<<<<|=======|>>>>>>>)' >/dev/null 2>&1; then
   fail "Se encontraron marcadores de conflicto."
 fi
 
@@ -72,9 +66,9 @@ while IFS= read -r markdown; do
   if ! grep -q '^# ' "$markdown" && ! has_valid_skill_frontmatter "$markdown"; then
     fail "Markdown sin H1 ni frontmatter válido de Skill: $markdown"
   fi
-done < <(find "${validation_roots[@]}" -type f -name '*.md' -print)
+done < <(find "${validation_roots[@]}" -path '.agents/skills' -prune -o -type f -name '*.md' -print)
 
-"${PYTHON_COMMAND[@]}" custom-harness/scripts/validate_harness.py --skill-root custom-harness
-"${PYTHON_COMMAND[@]}" -m unittest discover -s custom-harness/tests -p 'test_*.py'
+"$NODE_COMMAND" custom-harness/scripts/validate_harness.js --skill-root custom-harness
+"$NODE_COMMAND" --test custom-harness/tests/*.test.js
 
 echo "init.sh: validación completada correctamente."
